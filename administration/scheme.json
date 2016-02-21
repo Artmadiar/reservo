@@ -1,0 +1,16 @@
+{
+  "users":{
+    "id":{
+      "type":"int",
+      "check":false,
+      "represent":"ID",
+      "unique":false
+    },
+    "name":{
+      "type":"string",
+      "check":true,
+      "represent":"Наименование",
+      "unique":true
+    }
+  }
+}

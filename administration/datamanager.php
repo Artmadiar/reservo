@@ -10,7 +10,7 @@ include_once("init.php");
 
 /**
  * @param $object
- * @return $sql for insert
+ * @return sql
  */
 function insert($object){
 
@@ -30,4 +30,10 @@ function insert($object){
     $sql = substr($sql, 0, strlen($sql)-1).")";
 
     return $sql;
+}
+
+function cr_element($field){
+
+    return $field["represent"].':<input type="text" name="'.$field["name"].'" >';
+
 }

@@ -34,9 +34,3 @@ function insert($object){
 
     return $sql;
 }
-
-function cr_element($field){
-
-    return $field["represent"].':<input type="text" name="'.$field["name"].'" >';
-
-}

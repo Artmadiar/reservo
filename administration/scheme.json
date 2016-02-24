@@ -13,6 +13,13 @@
       "check":true,
       "represent":"Наименование",
       "unique":true
+    },
+    "is_active":{
+      "name":"is_active",
+      "type":"bool",
+      "check":false,
+      "represent":"Активность",
+      "unique":false
     }
   }
 }

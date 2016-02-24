@@ -12,6 +12,9 @@ include_once("init.php");
  * @param $object
  * @return sql
  */
+
+include_once("database.php");
+
 function insert($object){
 
     $sql = 'insert into $object (';

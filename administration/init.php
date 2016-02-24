@@ -10,8 +10,8 @@ global $objects;
 global $file_storage;
 global $host;
 
-$file_storage = "\files";
 $host = "reservo";
+$file_storage = "\\files";
 
 $json = file_get_contents('scheme.json');
 $objects = json_decode($json,true);

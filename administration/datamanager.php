@@ -34,3 +34,17 @@ function insert($object){
 
     return $sql;
 }
+
+
+function get_data($table,$where=''){
+
+    $pdo = Database::connect();
+    $sql = 'SELECT * FROM '.$table.' '.$where.' ORDER BY id';
+
+    $result = $pdo->query($sql);
+
+    Database::disconnect();
+
+    return $result;
+
+}

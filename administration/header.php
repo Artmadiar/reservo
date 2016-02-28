@@ -1,3 +1,4 @@
+<? include_once "entry.php"; ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -15,10 +16,10 @@
 	<!-- end: Mobile Specific -->
 	
 	<!-- start: CSS -->
-	<link id="bootstrap-style" href="../css/bootstrap.min.css" rel="stylesheet">
-	<link href="../css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link id="base-style" href="../css/style.css" rel="stylesheet">
-	<link id="base-style-responsive" href="../css/style-responsive.css" rel="stylesheet">
+	<link id="bootstrap-style" href="<? echo $rel_path; ?>css/bootstrap.min.css" rel="stylesheet">
+	<link href="<? echo $rel_path; ?>css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link id="base-style" href="<? echo $rel_path; ?>css/style.css" rel="stylesheet">
+	<link id="base-style-responsive" href="<? echo $rel_path; ?>css/style-responsive.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 	<!-- end: CSS -->
 	
@@ -26,11 +27,11 @@
 	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 	  	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<link id="ie-style" href="../css/ie.css" rel="stylesheet">
+		<link id="ie-style" href="<? echo $host;?>/css/ie.css" rel="stylesheet">
 	<![endif]-->
 	
 	<!--[if IE 9]>
-		<link id="ie9style" href="../css/ie9.css" rel="stylesheet">
+		<link id="ie9style" href="<? echo $host;?>/css/ie9.css" rel="stylesheet">
 	<![endif]-->
 		
 	<!-- start: Favicon -->
@@ -47,7 +48,7 @@
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container-fluid">
-				<a class="brand" href="index.html"><span>Reservo</span></a>
+				<a class="brand" href=""><span>Reservo</span></a>
 								
 				<!-- start: Header Menu -->
 				<div class="nav-no-collapse header-nav">
@@ -95,14 +96,14 @@
 			<div id="sidebar-left" class="span2">
 				<div class="nav-collapse sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked main-menu">
-						<li><a href="index.html"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Монитор</span></a></li>	
+						<li><a href="<? echo $rel_path."administration/" ?>"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Монитор</span></a></li>
 						<li><a href="messages.html"><i class="icon-envelope"></i><span class="hidden-tablet"> Брони</span></a></li>
 						<li><a href="tasks.html"><i class="icon-tasks"></i><span class="hidden-tablet"> Клиенты</span></a></li>
 						<li><a href="ui.html"><i class="icon-eye-open"></i><span class="hidden-tablet"> Аналитика</span></a></li>
 						<li>
 							<a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> Настройки</span></a>
 							<ul>
-								<li><a class="submenu" href="submenu.html"><i class="icon-file-alt"></i><span class="hidden-tablet"> Заведения</span></a></li>
+								<li><a class="submenu" href="<? echo $rel_path."administration/points" ?>"><i class="icon-file-alt"></i><span class="hidden-tablet"> Заведения</span></a></li>
 								<li><a class="submenu" href="submenu2.html"><i class="icon-file-alt"></i><span class="hidden-tablet"> Пользователи</span></a></li>
 								<li><a class="submenu" href="submenu3.html"><i class="icon-file-alt"></i><span class="hidden-tablet"> Журнал действий</span></a></li>
 							</ul>	
@@ -126,8 +127,12 @@
 			<ul class="breadcrumb">
 				<li>
 					<i class="icon-home"></i>
-					<a href="index.html">Home</a> 
+					<a href="<? echo $rel_path."administration/" ?>">Главная</a>
 					<i class="icon-angle-right"></i>
 				</li>
-				<li><a href="#">Dashboard</a></li>
+				<?
+					//$location = explode('/',$_SERVER['SCRIPT_NAME']);
+					$location = $_SERVER['SCRIPT_NAME'];
+				?>
+				<li><a href="#"><? echo $location; ?></a></li>
 			</ul>

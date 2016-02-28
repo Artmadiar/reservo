@@ -7,11 +7,6 @@
  */
 
 global $objects;
-global $file_storage;
-global $host;
 
-$host = "reservo";
-$file_storage = "\\files";
-
-$json = file_get_contents('scheme.json');
+$json = file_get_contents($abs_path.'\\scheme.json');
 $objects = json_decode($json,true);

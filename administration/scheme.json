@@ -1,111 +1,116 @@
 {
   "accounts": {
-    "id": {
-      "name": "id",
-      "type": "int",
-      "check": false,
-      "represent": "ID",
-      "unique": false,
-      "show": false
-    },
-    "login": {
-      "name": "login",
-      "type": "string",
-      "length":100,
-      "check": true,
-      "represent": "Логин",
-      "unique": true,
-      "show": true
-    },
-    "name": {
-      "name": "name",
-      "type": "string",
-      "check": true,
-      "represent": "Наименование",
-      "unique": true,
-      "show": true
-    },
-    "email": {
-      "name": "email",
-      "type": "email",
-      "check": true,
-      "represent": "E-mail",
-      "unique": true,
-      "show": true
-    },
-    "BIN": {
-      "name": "BIN",
-      "type": "string",
-      "length":12,
-      "check": true,
-      "represent": "ИИН/БИН",
-      "unique": true,
-      "show": true
-    },
-    "pass": {
-      "name": "pass",
-      "type": "password",
-      "check": true,
-      "represent": "Пароль",
-      "unique": false,
-      "show": false
-    },
-    "hash": {
-      "name": "hash",
-      "type": "password",
-      "check": false,
-      "represent": "Соль",
-      "unique": false,
-      "show": false
-    },
-    "date_reg": {
-      "name": "date_reg",
-      "type": "datetime",
-      "check": true,
-      "represent": "Дата регистрации",
-      "unique": false,
-      "show": false
-    },
-    "is_deleted": {
-      "name": "is_deleted",
-      "type": "bool",
-      "check": false,
-      "represent": "Удалено",
-      "unique": false,
-      "show": false
-    },
-    "paid_until": {
-      "name": "paid_until",
-      "type": "date",
-      "check": true,
-      "represent": "Подписка оплачена до",
-      "unique": false,
-      "show": true
-    },
-    "contacts": {
-      "name": "contacts",
-      "type": "text",
-      "check": true,
-      "represent": "Контакты",
-      "unique": false,
-      "show": false
-    },
-    "admin_email": {
-      "name": "admin_email",
-      "type": "email",
-      "check": true,
-      "represent": "E-mail администратора",
-      "unique": false,
-      "show": false
-    },
-    "admin_contacts": {
-      "name": "admin_contacts",
-      "type": "text",
-      "check": true,
-      "represent": "Контакты администратора",
-      "unique": false,
-      "show": false
-    }
+    "name":"accounts",
+    "represent":"Аккаунты",
+    "fields":
+      {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "check": false,
+          "represent": "ID",
+          "unique": false,
+          "show": false
+        },
+        "login": {
+          "name": "login",
+          "type": "string",
+          "length": 100,
+          "check": true,
+          "represent": "Логин",
+          "unique": true,
+          "show": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "check": true,
+          "represent": "Наименование",
+          "unique": true,
+          "show": true
+        },
+        "email": {
+          "name": "email",
+          "type": "email",
+          "check": true,
+          "represent": "E-mail",
+          "unique": true,
+          "show": true
+        },
+        "BIN": {
+          "name": "BIN",
+          "type": "string",
+          "length": 12,
+          "check": true,
+          "represent": "ИИН/БИН",
+          "unique": true,
+          "show": true
+        },
+        "pass": {
+          "name": "pass",
+          "type": "password",
+          "check": true,
+          "represent": "Пароль",
+          "unique": false,
+          "show": false
+        },
+        "hash": {
+          "name": "hash",
+          "type": "password",
+          "check": false,
+          "represent": "Соль",
+          "unique": false,
+          "show": false
+        },
+        "date_reg": {
+          "name": "date_reg",
+          "type": "datetime",
+          "check": true,
+          "represent": "Дата регистрации",
+          "unique": false,
+          "show": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "bool",
+          "check": false,
+          "represent": "Удалено",
+          "unique": false,
+          "show": false
+        },
+        "paid_until": {
+          "name": "paid_until",
+          "type": "date",
+          "check": true,
+          "represent": "Подписка до",
+          "unique": false,
+          "show": true
+        },
+        "contacts": {
+          "name": "contacts",
+          "type": "text",
+          "check": true,
+          "represent": "Контакты",
+          "unique": false,
+          "show": false
+        },
+        "admin_email": {
+          "name": "admin_email",
+          "type": "email",
+          "check": true,
+          "represent": "E-mail администратора",
+          "unique": false,
+          "show": false
+        },
+        "admin_contacts": {
+          "name": "admin_contacts",
+          "type": "text",
+          "check": true,
+          "represent": "Контакты администратора",
+          "unique": false,
+          "show": false
+        }
+      }
   },
   "users": {
     "id": {

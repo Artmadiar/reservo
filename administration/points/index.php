@@ -2,10 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Artmadiar
- * Date: 21.02.2016
- * Time: 5:41
+ * Date: 28.02.2016
+ * Time: 6:03
  */
-include_once("entry.php");
+
+include_once($_SERVER['DOCUMENT_ROOT']."\\administration\\entry.php");
 
 include ($abs_path."header.php");
 
@@ -14,10 +15,7 @@ include ($abs_path."header.php");
 //    echo "<br>" . cr_element($value);
 //}
 //echo '<br>';
-
-
-
-//echo cr_list('accounts');
+echo cr_list('accounts');
 
 
 

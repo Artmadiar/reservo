@@ -18,14 +18,14 @@ include_once("database.php");
 function insert($object){
 
     $sql = 'insert into $object (';
-    foreach($GLOBALS['objects'][$object] as $key=>$value)
+    foreach($GLOBALS['objects'][$object]['fields'] as $key=>$value)
     {
         if ($key!='id')
         $sql .= "$key,";
     }
     $sql = substr($sql, 0, strlen($sql)-1).") VALUES (";
 
-    foreach($GLOBALS['objects'][$object] as $key=>$value)
+    foreach($GLOBALS['objects'][$object]['fields'] as $key=>$value)
     {
         if ($key!='id')
         $sql .= $value["type"].',';

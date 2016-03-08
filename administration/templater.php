@@ -8,40 +8,125 @@
 
 include_once("datamanager.php");
 
-function cr_element($field){
+function cr_element($field,$value,$error){
+
+	$result = '';
+    $attrs = '';
+
+    if (($field["name"]=="is_deleted") || ($field["name"]=="date_reg")) {
+        $attrs .= ' readonly';
+    }
+
+    if ($field["check"]) {
+        $attrs .= ' required';
+    }
+
+    if ($field["length"]!=false) {
+        $attrs .= ' maxlength='.$field["length"];
+    }
+
 
     if ($field["type"]=="string") {
 		$result .='
-		<div class="control-group">
+		<div class="control-group '.(($error["error"]==true)?'error':'').'">
 			<label class="control-label" for="'.$field["name"].'">'.$field["represent"].'</label>
 			<div class="controls">
-				<input type="text" id="'.$field["name"].'" name="'.$field["name"].'">
-			</div>
+				<input type="text" '.$attrs.' id="'.$field["name"].'" name="'.$field["name"].'" value="'.$value.'" >';
+				if ($error["error"])
+                    $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+		$result .='	</div>
 		</div>';
     }
-
-    if ($field["type"]=="bool") {
-		$result .= '
-		<div class="control-group">
+    elseif ($field["type"]=="bool") {
+        $result .= '
+		<div class="control-group '.(($error["error"]==true)?'error':'').'">
 			<label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
 			<div class="controls">
 				<label class="checkbox">
 					<div class="checker" id="'.$field['name'].'">
 						<span>
-							<input type="checkbox" id="'.$field['name'].'" value="">
+							<input '.$attrs.' type="checkbox" id="'.$field['name'].'" value="'.$value.'">
 						</span>
 					</div>
 				</label>
 			</div>
 		</div>';
 	}
+    elseif ($field["type"]=="email") {
+
+        //TASK: $("#email")[0].checkValidity()
+        $result .= '
+		 <div class="control-group '.(($error["error"]==true)?'error':'').'">
+            <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+            <div class="controls">
+                <input type="email" '.$attrs.' class="form-control" id="'.$field['name'].'" name="'.$field['name'].'" value="'.$value.'" placeholder="Введите email">';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+    }
+    elseif ($field["type"]=="password") {
+
+        $result .= '
+		<div class="control-group '.(($error["error"]==true)?'error':'').'">
+			<label class="control-label" for="'.$field["name"].'">'.$field["represent"].'</label>
+			<div class="controls">
+				<input type="password" '.$attrs.' id="'.$field["name"].'" name="'.$field["name"].'" value="'.$value.'" >';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+    }
+    elseif ($field["type"]=="date") {
+
+        $result .= '
+        <div class="control-group '.(($error["error"]==true)?'error':'').'">
+		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+		    <div class="controls">
+		        <input type="date" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" value="'.$value.'" >';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+    }
+    elseif ($field["type"]=="datetime") {
+
+        $result .= '
+        <div class="control-group '.(($error["error"]==true)?'error':'').'">
+		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+		    <div class="controls">
+		        <input type="datetime-local" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" value="'.$value.'">';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+    }
+    elseif ($field["type"]=="text") {
+
+        $result .= '
+        <div class="control-group '.(($error["error"]==true)?'error':'').'">
+		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+		    <div class="controls">
+                <textarea class="form-control" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" rows="3">'.$value.'</textarea>';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+
+    }
 
     return $result;
 }
 
 function cr_list($table){
 
-    $data = get_data($GLOBALS['objects'][$table]['name']);
+    $data = get_data($GLOBALS['objects'][$table]['name'],"","","id DESC");
     $title = $GLOBALS['objects']['accounts']['represent'];
     //$iCurr = (empty($_GET['page']) ? 1 : intval($_GET['page']));
 
@@ -86,10 +171,11 @@ function cr_list($table){
 						  <thead>
 							  <tr>';
 
+
                     // TABLE HEAD
                 foreach($GLOBALS['objects'][$table]['fields'] as $key=>$value){
 
-                    if ($value['show']==true)
+                    if ($value['show_list']==true)
                     // add attribute aria-sort="ascending" / "descending"
                     // add attribute class="sorting_asc"
                     $result.='
@@ -108,19 +194,19 @@ function cr_list($table){
 						  </thead>
 					  <tbody>';
 
-                //odd/even
                     foreach($data as $key=>$row) {
                         $result .= '<tr>';
-
                         foreach ($GLOBALS['objects'][$table]['fields'] as $column => $value) {
-                            if ($value['show']==false) continue;
+                            if ($value['show_list']==false) continue;
                             $result .= '
-								<td>' . $row[$value['name']] . '</td>';
+								<td><a name="id'.$row['id'].'"></a>
+								' . $row[$value['name']] . '</td>';
+
                         }
                         //ACTIONS BUTTON
                         $result .= '
 								<td class="center ">
-									<a class="btn btn-info" href="edit.php?id='.$row['id'].'">
+									<a class="btn btn-info" href="update.php?id='.$row['id'].'">
 										<i class="halflings-icon white edit"></i>
 									</a>
 									<a class="btn btn-danger" href="delete.php?id='.$row['id'].'">

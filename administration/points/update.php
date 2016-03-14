@@ -39,7 +39,9 @@ foreach ($accounts["fields"] as $key => $value) {
 
 echo    '   <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                <button class="btn">Отмена</button>
+                <a class="btn" href="/administration/points/">
+                    Отмена
+                </a>
             </div>
             </fieldset>
         </form>';

@@ -7,12 +7,6 @@
  */
 
 include_once("init.php");
-
-/**
- * @param $object
- * @return sql
- */
-
 include_once("database.php");
 
 
@@ -96,6 +90,7 @@ function insert($object){
         } else {
             $sql .= '?,';
             $values[] = $_POST[$value["name"]];
+            //$values[] = mysqli_real_escape_string($pdo,$_POST[$value["name"]]);
         }
     }
     $sql = substr($sql, 0, strlen($sql)-1).")";
@@ -121,13 +116,18 @@ function update($object,$where){
     foreach($GLOBALS['objects'][$object]['fields'] as $key=>$value) {
         if ($key == 'id') {
         } elseif ($key == "date_reg") {
+        } elseif ($value["type"] == "bool") {
+            $sql .= $key.'='.$_POST[$value["name"]].',';
         } else {
             $sql .= $key.'=?,';
+            //$values[] = mysqli_real_escape_string($pdo,$_POST[$value["name"]]);
             $values[] = $_POST[$value["name"]];
         }
     }
     $sql = substr($sql, 0, strlen($sql)-1);
+    //$where = mysqli_real_escape_string($pdo,$where);
     $sql = $sql.' WHERE '.$where;
+
     $pdo = Database::connect();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $q = $pdo->prepare($sql);
@@ -139,6 +139,28 @@ function update($object,$where){
     else
         return false;
 
+}
+
+function edit_delete($object,$delete,$where){
+
+    if ((!isset($object)) || (!isset($delete)) || (!isset($where)))
+        return false;
+
+    $sql = 'update '.$object .' SET is_deleted=';
+    $sql  .= (($delete==true)?'true':'false');
+
+    //$where = mysqli_real_escape_string($pdo,$where);
+    $sql = $sql.' WHERE '.$where;
+    $pdo = Database::connect();
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $q = $pdo->prepare($sql);
+    $q->execute();
+    Database::disconnect();
+
+    if (intval($q->errorCode())==0)
+        return true;
+    else
+        return false;
 }
 
 function get_data($table,$where='',$selected_fields='',$order=''){
@@ -154,6 +176,8 @@ function get_data($table,$where='',$selected_fields='',$order=''){
     }
 
     $pdo = Database::connect();
+    //$where = mysqli_real_escape_string($pdo,$where);
+    //$order = mysqli_real_escape_string($pdo,$order);
     $sql = 'SELECT '.$selected_fields.' FROM '.$table.' '.$where.' '.$order;
     $result = $pdo->query($sql);
     Database::disconnect();

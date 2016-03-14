@@ -41,17 +41,15 @@ function cr_element($field,$value,$error){
     elseif ($field["type"]=="bool") {
         $result .= '
 		<div class="control-group '.(($error["error"]==true)?'error':'').'">
-			<label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
-			<div class="controls">
-				<label class="checkbox">
-					<div class="checker" id="'.$field['name'].'">
-						<span>
-							<input '.$attrs.' type="checkbox" id="'.$field['name'].'" value="'.$value.'">
-						</span>
-					</div>
-				</label>
-			</div>
-		</div>';
+			<label class="control-label" for="'.$field["name"].'">'.$field["represent"].'</label>
+    		<div class="controls">
+                <div class="btn-group btn-toggle">
+                    <button type="button" class="btn btn-xs '.(($value==true)?'btn-primary btn-default':'').'">Да</button>
+                    <button type="button" class="btn btn-xs '.(($value==true)?'':'btn-primary btn-default').'">Нет</button>
+                    <input type="hidden" id="'.$field["name"].'" name="'.$field["name"].'" value="'.(($value==true)?'true':'false').'" />
+                </div>
+            </div>
+        </div>';
 	}
     elseif ($field["type"]=="email") {
 
@@ -120,14 +118,47 @@ function cr_element($field,$value,$error){
 		</div>';
 
     }
+    //TODO:data-list
+    elseif ($field["type"]=="data-list") {
+
+        $result .= '
+        <div class="control-group '.(($error["error"]==true)?'error':'').'">
+		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+		    <div class="controls">
+                <textarea class="form-control" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" rows="3">'.$value.'</textarea>';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+
+    }
+    //TODO:file-picture
+    elseif ($field["type"]=="picture") {
+
+        $result .= '
+        <div class="control-group '.(($error["error"]==true)?'error':'').'">
+		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+		    <div class="controls">
+                <textarea class="form-control" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" rows="3">'.$value.'</textarea>';
+        if ($error["error"])
+            $result .= '
+                    <span class="help-inline">'.$error["detail"].'</span>';
+        $result .='	</div>
+		</div>';
+
+    }
 
     return $result;
 }
 
 function cr_list($table){
 
-    $data = get_data($GLOBALS['objects'][$table]['name'],"","","id DESC");
-    $title = $GLOBALS['objects']['accounts']['represent'];
+    //TODO:search
+    //$search = "";
+    $data = get_data($table,"","","id DESC");
+    $title = $GLOBALS['objects'][$table]['represent'];
+    //TODO:pagination
     //$iCurr = (empty($_GET['page']) ? 1 : intval($_GET['page']));
 
     $result = '
@@ -137,25 +168,14 @@ function cr_list($table){
 						<h2><i class="halflings-icon user"></i><span class="break"></span>'.
                         $title
                         .'</h2>
-						<div class="box-icon">
+						<!--<div class="box-icon">
 							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
-						</div>
+						</div>-->
 					</div>
 					<div class="box-content">
 
 						<div class="row-fluid">
-						    <div class="span3">
-						        <div id="DataTables_Table_0_length" class="dataTables_length">
-						            <label>
-						                <select style="margin-right: 5px; width: 30%;" size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
-						                    <option value="10" selected="selected">10</option>
-						                    <option value="25">25</option><option value="50">50</option>
-						                    <option value="100">100</option>
-						                </select> записей на странице
-						            </label>
-						        </div>
-						    </div>
-						    <div class="span8">
+						    <div class="span11">
 						      <div class="dataTables_filter" id="DataTables_Table_0_filter">
 						            <label>Поиск: <input type="text" style="width:70%;" aria-controls="DataTables_Table_0"></label>
 						        </div>
@@ -199,13 +219,14 @@ function cr_list($table){
                         foreach ($GLOBALS['objects'][$table]['fields'] as $column => $value) {
                             if ($value['show_list']==false) continue;
                             $result .= '
-								<td><a name="id'.$row['id'].'"></a>
+								<td style="'.(($row['is_deleted']==true)?'background-color:#fae2e2;':'').'">
+								<a name="id'.$row['id'].'"></a>
 								' . $row[$value['name']] . '</td>';
 
                         }
                         //ACTIONS BUTTON
                         $result .= '
-								<td class="center ">
+								<td style="'.(($row['is_deleted']==true)?'background-color:#fae2e2;':'').' class="center ">
 									<a class="btn btn-info" href="update.php?id='.$row['id'].'">
 										<i class="halflings-icon white edit"></i>
 									</a>
@@ -221,10 +242,6 @@ function cr_list($table){
 
                     <div class="row-fluid">
                         <div class="span12">
-                            <div class="dataTables_info" id="DataTables_Table_0_info">Показано с 1 по 1 из 1 записи(ей)
-                            </div>
-                        </div>
-                        <div class="span12 center">
                             <div class="dataTables_paginate paging_bootstrap pagination">
                                 <ul>
                                     <li class="prev disabled">
@@ -239,8 +256,22 @@ function cr_list($table){
                                 </ul>
                             </div>
                         </div>
+                        <div class="span3">
+                            <div class="dataTables_info" id="DataTables_Table_0_info">Показано с 1 по 1 из 1 записи(ей)
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select style="margin-right: 5px; width: 30%;" size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option><option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> записей на странице
+                                </label>
+                            </div>
+                        </div>
                     </div>
-
 				 </div>
 			</div>
 		</div><!--/span-->';

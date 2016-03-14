@@ -71,6 +71,10 @@
 		<script src="<? echo $rel_path; ?>js/retina.js"></script>
 
 		<script src="<? echo $rel_path; ?>js/custom.js"></script>
+
+		//MY JAVASCRIPT
+		<script src="<? echo $rel_path; ?>js/form.js"></script>
+
 	<!-- end: JavaScript-->
 	
 </body>

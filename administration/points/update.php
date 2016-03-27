@@ -28,7 +28,7 @@ if (count($_POST)!=0) {
 }
 include ($abs_path."header.php");
 
-echo '<form class="form-horizontal" method="POST">
+echo '<form ENCTYPE="multipart/form-data" class="form-horizontal" method="POST">
     <fieldset>';
 
 $data = get_first("accounts",'id='.$_REQUEST['id'],'','id');

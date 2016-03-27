@@ -13,23 +13,13 @@
           "show_list": false,
           "show_form": false
         },
-        "login": {
-          "name": "login",
-          "type": "string",
-          "length": 100,
-          "check": true,
-          "represent": "Логин",
-          "unique": true,
-          "show_list": true,
-          "show_form": true
-        },
         "name": {
           "name": "name",
           "type": "string",
           "check": true,
           "represent": "Наименование",
           "unique": true,
-          "show_true": true,
+          "show_list": true,
           "show_form": true
         },
         "email": {
@@ -49,24 +39,6 @@
           "represent": "ИИН/БИН",
           "unique": true,
           "show_list": true,
-          "show_form": true
-        },
-        "pass": {
-          "name": "pass",
-          "type": "password",
-          "check": false,
-          "represent": "Пароль",
-          "unique": false,
-          "show_list": false,
-          "show_form": true
-        },
-        "hash": {
-          "name": "hash",
-          "type": "password",
-          "check": false,
-          "represent": "Соль",
-          "unique": false,
-          "show_list": false,
           "show_form": true
         },
         "date_reg": {
@@ -122,33 +94,105 @@
           "unique": false,
           "show_list": false,
           "show_form":true
+        },
+        "logo": {
+          "name": "logo",
+          "type": "picture",
+          "check": false,
+          "represent": "Логотип",
+          "unique": false,
+          "show_list": false,
+          "show_form":true
         }
       }
   },
   "users": {
-    "id": {
-      "name": "id",
-      "type": "int",
-      "check": false,
-      "represent": "ID",
-      "unique": false,
-      "show": false
-    },
-    "name": {
-      "name": "name",
-      "type": "string",
-      "check": true,
-      "represent": "Наименование",
-      "unique": true,
-      "show": true
-    },
-    "is_deleted": {
-      "name": "is_active",
-      "type": "bool",
-      "check": false,
-      "represent": "Удалено",
-      "unique": false,
-      "show": false
+    "name":"users",
+    "represent":"Пользователи",
+    "fields":
+    {
+      "id": {
+        "name": "id",
+        "type": "int",
+        "check": false,
+        "represent": "ID",
+        "unique": false,
+        "show_list": false,
+        "show_form": false
+      },
+      "id_account": {
+        "name": "id_account",
+        "type": "index_data",
+        "check": true,
+        "represent": "Аккаунт",
+        "unique": false,
+        "show_list": true,
+        "show_form": true
+      },
+      "login": {
+        "name": "login",
+        "type": "string",
+        "length": 100,
+        "check": true,
+        "represent": "Логин",
+        "unique": true,
+        "show_list": true,
+        "show_form": true
+      },
+      "name": {
+        "name": "name",
+        "type": "string",
+        "check": true,
+        "represent": "Наименование",
+        "unique": true,
+        "show_true": true,
+        "show_form": true
+      },
+      "email": {
+        "name": "email",
+        "type": "email",
+        "check": true,
+        "represent": "E-mail",
+        "unique": true,
+        "show_list": true,
+        "show_form": true
+      },
+      "password": {
+        "name": "password",
+        "type": "password",
+        "check": false,
+        "represent": "Пароль",
+        "unique": false,
+        "show_list": false,
+        "show_form": true
+      },
+      "hash": {
+        "name": "hash",
+        "type": "password",
+        "check": false,
+        "represent": "Соль",
+        "unique": false,
+        "show_list": false,
+        "show_form": true
+      },
+      "date_reg": {
+        "name": "date_reg",
+        "type": "datetime",
+        "check": false,
+        "represent": "Дата регистрации",
+        "unique": false,
+        "show_list": false,
+        "show_form": true
+      },
+      "is_deleted": {
+        "name": "is_deleted",
+        "type": "bool",
+        "check": false,
+        "represent": "Удалено",
+        "unique": false,
+        "show_list": false,
+        "show_form": true
+      }
     }
   }
 }

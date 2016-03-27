@@ -52,7 +52,6 @@ function cr_element($field,$value,$error){
         </div>';
 	}
     elseif ($field["type"]=="email") {
-
         //TASK: $("#email")[0].checkValidity()
         $result .= '
 		 <div class="control-group '.(($error["error"]==true)?'error':'').'">
@@ -79,7 +78,6 @@ function cr_element($field,$value,$error){
 		</div>';
     }
     elseif ($field["type"]=="date") {
-
         $result .= '
         <div class="control-group '.(($error["error"]==true)?'error':'').'">
 		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
@@ -116,37 +114,45 @@ function cr_element($field,$value,$error){
                     <span class="help-inline">'.$error["detail"].'</span>';
         $result .='	</div>
 		</div>';
-
     }
-    //TODO:data-list
-    elseif ($field["type"]=="data-list") {
-
+    elseif ($field["type"]=="index-data") {
         $result .= '
-        <div class="control-group '.(($error["error"]==true)?'error':'').'">
-		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
-		    <div class="controls">
-                <textarea class="form-control" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" rows="3">'.$value.'</textarea>';
-        if ($error["error"])
-            $result .= '
-                    <span class="help-inline">'.$error["detail"].'</span>';
-        $result .='	</div>
-		</div>';
-
+                <div class="control-group '.(($error["error"]==true)?'error':'').'">
+                    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
+                    <div class="controls">
+                        <select id="'.$field['name'].'" name="'.$field['name'].'" data-rel="chosen">';
+                        $data_list = get_data($field['data-source'],"is_deleted=false","id,name","name");
+                        foreach($data_list as $key=>$row) {
+                            $result .= '
+                                            <option value="'.$row['id'].'">'.$row['name'].'</option >';
+                        }
+                        $result .= '
+                        </select>
+                    </div>
+                </div>';
     }
-    //TODO:file-picture
     elseif ($field["type"]=="picture") {
 
-        $result .= '
-        <div class="control-group '.(($error["error"]==true)?'error':'').'">
-		    <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
-		    <div class="controls">
-                <textarea class="form-control" '.$attrs.' id="'.$field['name'].'" name="'.$field['name'].'" rows="3">'.$value.'</textarea>';
-        if ($error["error"])
-            $result .= '
-                    <span class="help-inline">'.$error["detail"].'</span>';
-        $result .='	</div>
-		</div>';
+        $pic = get_pic($value);
 
+        $result .= '
+                  <div class="control-group '.(($error["error"]==true)?'error':'').'">
+                      <label class="control-label">'.$field['represent'].'</label>
+                      <div class="controls" >
+                          <input type="hidden" name="'.$field['name'].'" value="'.$value.'">
+                          <input name="'.$field['name'].'" id="'.$field['name'].'" type="file">';
+        if ($pic!=false)
+            $result .= '
+                          Текущее изображение:
+                          <a href="'.$pic["path"].'" class="link_to_pic" target="_blank" >'.$pic["name"].'</a>
+                          <i class="icon-remove remove_pic"></i>
+                          <span class="pic">
+                              <img src="'.$pic["path"].'">
+                          </span>';
+
+        $result .= '
+                      </div>
+                  </div>';
     }
 
     return $result;

@@ -69,7 +69,7 @@ function validate($object)
 
 
 
-function insert($object){
+function insert($object,&$id=null){
 
     $sql = 'insert into '.$object .' (';
 
@@ -99,6 +99,9 @@ function insert($object){
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $q = $pdo->prepare($sql);
     $q->execute($values);
+    if ($id!=null)
+        $id = $pdo->lastInsertId();
+
     Database::disconnect();
 
     if (intval($q->errorCode())==0)
@@ -113,11 +116,37 @@ function update($object,$where){
     $sql = 'update '.$object .' SET ';
 
     $values = array();
+
+    $error_load_pics = false;
+
     foreach($GLOBALS['objects'][$object]['fields'] as $key=>$value) {
         if ($key == 'id') {
         } elseif ($key == "date_reg") {
         } elseif ($value["type"] == "bool") {
             $sql .= $key.'='.$_POST[$value["name"]].',';
+        } elseif ($value["type"] == "picture") {
+
+            $sql .= $key.'=?,';
+
+            $int_pic = 0;
+            //If we have id and don't have pic
+            if ((!empty($_POST[$value["name"]])) && ($_POST[$value["name"]]!=0) && (empty($_FILES[$value["name"]]["name"]))) {
+                $int_pic = $_POST[$value["name"]];
+            //if we don't have id
+            } else {
+                //but have file of pic
+                if (!empty($_FILES[$value["name"]]["name"])){
+                    //load pic and get id of file
+                    $res_load = load_picture($value["name"]);
+                    //if successful load
+                    if ($res_load['valid']==true)
+                        $int_pic = $res_load['id'];
+                    else
+                        $error_load_pics = true;
+                }
+            }
+            $values[] = $int_pic;
+
         } else {
             $sql .= $key.'=?,';
             //$values[] = mysqli_real_escape_string($pdo,$_POST[$value["name"]]);
@@ -134,7 +163,7 @@ function update($object,$where){
     $q->execute($values);
     Database::disconnect();
 
-    if (intval($q->errorCode())==0)
+    if ((intval($q->errorCode())==0) && ($error_load_pics==false))
         return true;
     else
         return false;
@@ -161,6 +190,65 @@ function edit_delete($object,$delete,$where){
         return true;
     else
         return false;
+}
+
+function load_picture($pic,&$pdo=false){
+
+    $picture = $_FILES[$pic];
+
+    //check
+    if (!empty($picture) && $picture['name']!="")
+    {
+        $imageinfo = getimagesize($picture['tmp_name']);
+        if($imageinfo['mime'] != 'image/gif'
+            && $imageinfo['mime'] != 'image/jpeg'
+            && $imageinfo['mime'] != 'image/png'
+            && $imageinfo['mime'] != 'image/bmp') {
+            return array('error' => "Извините, изображение должно быть формата JPEG/PNG/GIF/BMP!",
+                  'valid' => false,
+                  'id'    => 0);
+        }
+        $format = $imageinfo['mime'];
+        $pos = strpos($imageinfo['mime'],'/');
+        if ($pos>0)
+            $format = substr($imageinfo['mime'],$pos+1,strlen($imageinfo['mime']));
+        $name = basename($picture["name"]);
+
+        $not_set_pdo = ($pdo==false);
+        if ($not_set_pdo) {
+            $pdo = Database::connect();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        $sql = 'INSERT INTO files (date_reg,id_user,name,format) VALUES (NOW(),'.$GLOBALS["user"]["id"].',"'.$name.'","'.$format.'") ';
+        $q = $pdo->prepare($sql);
+        $q->execute();
+        $id = $pdo->lastInsertId();
+
+        if ($not_set_pdo)
+            Database::disconnect();
+
+        if (intval($q->errorCode())!=0)
+            return array('error' => "Ошибка загрузки изображения в базу данных!",
+                'valid' => false,
+                'id'    => 0);
+
+        $uploadfile = $GLOBALS['files_storage_server'] . $id . '.' . $format;
+        if (move_uploaded_file($picture['tmp_name'], $uploadfile)) {
+            return array('error' => "",
+                'valid' => true,
+                'id'    => $id);
+        }
+        else {
+            return array('error' => "Ошибка загрузки изображения!",
+                'valid' => false,
+                'id'    => 0);
+        }
+
+    }
+    else
+        return array('error' => "",
+            'valid' => false,
+            'id'    => 0);
 }
 
 function get_data($table,$where='',$selected_fields='',$order=''){
@@ -203,5 +291,14 @@ function have_data($table,$where='',$selected_fields=''){
     }
 
     return $have_data;
+}
+
+function get_pic($id){
+
+    if ($id==0) return false;
+    $pic = get_first("files","id=".$id,"id,name,format");
+    if ($pic==false) return false;
+    $pic["path"] = $GLOBALS['rel_path'].$GLOBALS['files_storage'].$pic['id'].'.'.$pic['format'];
+    return $pic;
 }
 

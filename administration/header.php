@@ -23,6 +23,9 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 
 	<link id="style_admin" href="<? echo $rel_path; ?>css/style_admin.css" rel="stylesheet">
+
+	<!-- MY CSS -->
+	<link id="form" href="<? echo $rel_path; ?>css/form.css" rel="stylesheet">
 	<!-- end: CSS -->
 	
 

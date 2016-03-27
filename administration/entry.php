@@ -6,13 +6,16 @@
  * Time: 8:33
  */
 
-global $file_storage;
+global $files_storage;
+global $files_storage_server;
 global $rel_path;
 global $abs_path;
+global $user;
 
 //initial
 
-$file_storage = $_SERVER['DOCUMENT_ROOT']."\\administration\\files";
+$files_storage_server = $_SERVER['DOCUMENT_ROOT']."\\administration\\files\\";
+$files_storage = "administration/files/";
 
 $abs_path = $_SERVER['DOCUMENT_ROOT']."\\administration\\";
 
@@ -22,6 +25,7 @@ for ($i = 1; $i <= $level; $i++) {
     $rel_path.='../';
 }
 
+$user = array("id"=>0,"login"=>"admin");
 
 //includes
 

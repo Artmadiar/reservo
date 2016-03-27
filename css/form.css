@@ -1,0 +1,10 @@
+
+.pic {
+    width: 20%;
+    heigth: 20%;
+    position: absolute;
+    z-index: -1;
+    margin-left:15px;
+    outline: 1px solid #000; /* Чёрная рамка */
+    border: 4px solid #fff; /* Белая рамка */
+}

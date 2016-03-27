@@ -72,7 +72,7 @@
 
 		<script src="<? echo $rel_path; ?>js/custom.js"></script>
 
-		//MY JAVASCRIPT
+		<!-- MY JavaScript-->
 		<script src="<? echo $rel_path; ?>js/form.js"></script>
 
 	<!-- end: JavaScript-->

@@ -106,6 +106,64 @@
         }
       }
   },
+  "files":{
+    "name":"files",
+    "represent":"Файлы",
+    "fields":
+    {
+     "id":{
+       "name": "id",
+       "type": "int",
+       "check": false,
+       "represent": "ID",
+       "unique": false,
+       "show_list": false,
+       "show_form": false
+     },
+      "name": {
+        "name": "name",
+        "type": "string",
+        "check": true,
+        "represent": "Наименование",
+        "unique": true,
+        "show_true": true,
+        "show_form": true
+      },
+      "format": {
+        "name": "format",
+        "type": "string",
+        "check": false,
+        "represent": "Формат",
+        "unique": false,
+        "show_true": true,
+        "show_form": true
+      },
+      "date_reg": {
+        "name": "date_reg",
+        "type": "string",
+        "check": false,
+        "represent": "Дата регистрации",
+        "unique": false,
+        "show_true": false,
+        "show_form": false
+      },
+      "user_id": {
+        "name": "user_id",
+        "type": "index_data",
+        "data": {
+          "name":"user",
+          "table":"users",
+          "index":"id",
+          "field":"name"
+        },
+        "check": true,
+        "represent": "Пользователь",
+        "unique": false,
+        "show_true": true,
+        "show_form": true
+      }
+    }
+  },
   "users": {
     "name":"users",
     "represent":"Пользователи",
@@ -123,6 +181,12 @@
       "id_account": {
         "name": "id_account",
         "type": "index_data",
+        "data": {
+          "name":"account",
+          "table":"accounts",
+          "index":"id",
+          "field":"name"
+        },
         "check": true,
         "represent": "Аккаунт",
         "unique": false,

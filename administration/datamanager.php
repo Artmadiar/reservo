@@ -20,16 +20,13 @@ function validate($object)
 
         $check = $value["check"];
         $unique = $value["unique"];
-        $where = '';
+        $where = array();
         if (!empty($_REQUEST['id']))
-            $where = 'NOT id='.$_REQUEST['id'].' AND ';
+            $where['id'] = array('compare'=>'<>','value'=>$_REQUEST['id'],'separator'=>'AND');
         if ($check && $unique) {
             if (!empty($_POST[$value["name"]]) == true) {
-                if (
-                    have_data($object,
-                        $where.' '.$value["name"] . '="' . $_POST[$value["name"]] . '"',
-                        $value["name"]) == false
-                ) {
+                $where[$value["name"]] = array('compare'=>'=','value'=>$_POST[$value["name"]],'type'=>$value["type"]);
+                if (have_data($object,$where,$value["name"]) == false) {
                     $fields[$key] = array("error" => false, "detail" => "");
                 } else {
                     $result = false;
@@ -47,10 +44,11 @@ function validate($object)
                 $fields[$key] = array("error" => true, "detail" => "Обязательное поле для заполнения!");
             }
         } elseif (!$check && $unique) {
+            $where[$value["name"]] = array("compare"=>'=','value'=>$_POST[$value["name"]],"type"=>$value["type"]);
             if (!empty($_POST[$value["name"]]) == true) {
                 if (
                     have_data($object,
-                        $value["name"] . '=`' . $_POST[$value["name"]] . '`',
+                        $where,
                         $value["name"]) == false
                 ) {
                     $fields[$key] = array("error" => false, "detail" => "");
@@ -111,7 +109,7 @@ function insert($object,&$id=null){
 
 }
 
-function update($object,$where){
+function update($object,$where=array()){
 
     $sql = 'update '.$object .' SET ';
 
@@ -155,7 +153,7 @@ function update($object,$where){
     }
     $sql = substr($sql, 0, strlen($sql)-1);
     //$where = mysqli_real_escape_string($pdo,$where);
-    $sql = $sql.' WHERE '.$where;
+    $sql = $sql.sql_ifs_builder($where);
 
     $pdo = Database::connect();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -170,16 +168,16 @@ function update($object,$where){
 
 }
 
-function edit_delete($object,$delete,$where){
+function edit_delete($object,$delete,$where=array()){
 
-    if ((!isset($object)) || (!isset($delete)) || (!isset($where)))
+    if ((!isset($object)) || (!isset($delete)) || (count($where)==0))
         return false;
 
     $sql = 'update '.$object .' SET is_deleted=';
     $sql  .= (($delete==true)?'true':'false');
 
     //$where = mysqli_real_escape_string($pdo,$where);
-    $sql = $sql.' WHERE '.$where;
+    $sql = $sql.sql_ifs_builder($where);
     $pdo = Database::connect();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $q = $pdo->prepare($sql);
@@ -219,7 +217,7 @@ function load_picture($pic,&$pdo=false){
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-        $sql = 'INSERT INTO files (date_reg,id_user,name,format) VALUES (NOW(),'.$GLOBALS["user"]["id"].',"'.$name.'","'.$format.'") ';
+        $sql = 'INSERT INTO files (date_reg,user_id,name,format) VALUES (NOW(),'.$GLOBALS["user"]["id"].',"'.$name.'","'.$format.'") ';
         $q = $pdo->prepare($sql);
         $q->execute();
         $id = $pdo->lastInsertId();
@@ -251,13 +249,13 @@ function load_picture($pic,&$pdo=false){
             'id'    => 0);
 }
 
-function get_data($table,$where='',$selected_fields='',$order=''){
-
-    if ($where!='')
-        $where = ' WHERE '.$where;
+function get_data($table,$where=array(),$selected_fields='',$order=''){
 
     if ($selected_fields=='')
         $selected_fields = '*';
+
+    if ($where=="")
+        $where = array();
 
     if ($order!=''){
         $order = 'ORDER BY '.$order;
@@ -266,21 +264,36 @@ function get_data($table,$where='',$selected_fields='',$order=''){
     $pdo = Database::connect();
     //$where = mysqli_real_escape_string($pdo,$where);
     //$order = mysqli_real_escape_string($pdo,$order);
-    $sql = 'SELECT '.$selected_fields.' FROM '.$table.' '.$where.' '.$order;
+    $sql = 'SELECT '.$selected_fields.' FROM '.$table.' '.sql_ifs_builder($where).' '.$order;
     $result = $pdo->query($sql);
     Database::disconnect();
 
     return $result;
 }
 
-function get_first($table,$where='',$selected_fields='',$order=''){
-
+function get_first($table,$where=array(),$selected_fields='',$order='',$in=0){
+    $in++;
     $result = get_data($table,$where,$selected_fields,$order);
+    if ($result==false)
+        return false;
     $row = $result->fetch();
+
+    foreach($GLOBALS['objects'][$table]['fields'] as $key=>$value) {
+        if ($value["type"]=="index_data"){
+
+            if ($in>=4) return null;
+
+            $index_data = get_first($value["data"]["table"],
+                array($value["data"]["index"]=>array("compare"=>"=","value"=>$row[$value["name"]])),"","",$in);
+                //$value["data"]["field"]);
+
+            $row[$value["data"]["name"]] = $index_data;//[$value["data"]["field"]];
+        }
+    }
     return $row;
 }
 
-function have_data($table,$where='',$selected_fields=''){
+function have_data($table,$where=array(),$selected_fields=''){
 
     $result = get_data($table,$where,$selected_fields);
     if ($result->rowCount()==0){
@@ -296,9 +309,40 @@ function have_data($table,$where='',$selected_fields=''){
 function get_pic($id){
 
     if ($id==0) return false;
-    $pic = get_first("files","id=".$id,"id,name,format");
+    $pic = get_first("files",array("id"=>array("value"=>$id)),"");
     if ($pic==false) return false;
     $pic["path"] = $GLOBALS['rel_path'].$GLOBALS['files_storage'].$pic['id'].'.'.$pic['format'];
+
     return $pic;
 }
 
+function sql_ifs_builder($ifs){
+
+    $result = '';
+
+    if (count($ifs)==0) return $result;
+
+    foreach($ifs as $key=>$value){
+
+        $compare = $value['compare'];
+        if ((!isset($compare)) || (empty($compare)))
+            $compare = "=";
+
+        $val = $value['value'];
+        if (
+            ($value["type"]=='string') ||
+            ($value["type"]=='email') ||
+            ($value["type"]=='string')
+            )
+            $val = "'".$val."'";
+
+        $result .= ' '.$key.$compare.$val;
+        if (isset($value['separator']))
+            $result .= ' '.$value['separator'];
+    }
+
+    if ($result!='') $result = ' WHERE '.$result;
+    $result;
+    return $result;
+
+}

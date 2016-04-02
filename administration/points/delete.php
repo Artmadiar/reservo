@@ -20,7 +20,7 @@ if (count($_POST)!=0) {
         if (!empty($_POST["apply"])) {
 
             if ($_POST["apply"]==true) {
-                if (edit_delete("accounts", true, 'id=' . $_REQUEST["id"]) == true) {
+                if (edit_delete("accounts", true, array('id'=>array('compare'=>'=','value'=>$_REQUEST["id"]))) == true) {
                     header("Location: /administration/points/#id" . $_REQUEST["id"]);
                 }
             }
@@ -33,7 +33,7 @@ if (count($_POST)!=0) {
 }
 include ($abs_path."header.php");
 
-$data = get_first("accounts",'id='.$_REQUEST['id'],'','id');
+$data = get_first("accounts",array('id'=>array('value'=>$_REQUEST['id'])),'','id');
 
 echo '
 <div class="container">

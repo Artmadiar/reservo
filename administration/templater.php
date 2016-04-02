@@ -121,7 +121,8 @@ function cr_element($field,$value,$error){
                     <label class="control-label" for="'.$field['name'].'">'.$field['represent'].'</label>
                     <div class="controls">
                         <select id="'.$field['name'].'" name="'.$field['name'].'" data-rel="chosen">';
-                        $data_list = get_data($field['data-source'],"is_deleted=false","id,name","name");
+                        $data_list = get_data($field['data-source'],array("is_deleted"=>array("compare"=>"=","value"=>false)),
+                                                        "id,name","name");
                         foreach($data_list as $key=>$row) {
                             $result .= '
                                             <option value="'.$row['id'].'">'.$row['name'].'</option >';
@@ -162,7 +163,7 @@ function cr_list($table){
 
     //TODO:search
     //$search = "";
-    $data = get_data($table,"","","id DESC");
+    $data = get_data($table,array(),"","id DESC");
     $title = $GLOBALS['objects'][$table]['represent'];
     //TODO:pagination
     //$iCurr = (empty($_GET['page']) ? 1 : intval($_GET['page']));

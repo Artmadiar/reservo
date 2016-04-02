@@ -21,7 +21,7 @@ if (count($_POST)!=0) {
     }
 
     if ($valid["result"] == true) {
-        if (update("accounts",'id='.$_REQUEST["id"])==true){
+        if (update("accounts",array('id'=>array('value'=>$_REQUEST["id"])))==true){
             header("Location: /administration/points/#id".$_REQUEST["id"]);
         }
     }
@@ -31,7 +31,7 @@ include ($abs_path."header.php");
 echo '<form ENCTYPE="multipart/form-data" class="form-horizontal" method="POST">
     <fieldset>';
 
-$data = get_first("accounts",'id='.$_REQUEST['id'],'','id');
+$data = get_first("accounts",array('id'=>array('compare'=>'=','value'=>$_REQUEST['id'])),'','id');
 foreach ($accounts["fields"] as $key => $value) {
     if ($value["show_form"])
         echo  cr_element($value,!empty($_POST[$value["name"]])?$_POST[$value["name"]]:$data[$value["name"]],$valid["fields"][$key]);

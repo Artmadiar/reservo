@@ -8,5 +8,5 @@
 
 global $objects;
 
-$json = file_get_contents($abs_path.'\\scheme.json');
+$json = file_get_contents($abs_path.'\\common\\scheme.json');
 $objects = json_decode($json,true);

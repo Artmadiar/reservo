@@ -6,8 +6,8 @@
  * Time: 7:01
  */
 
-include_once("init.php");
-include_once("database.php");
+include_once($GLOBALS["abs_path"]."\\common\\init.php");
+include_once($GLOBALS["abs_path"]."\\common\\database.php");
 
 
 function validate($object)

@@ -6,7 +6,7 @@
  * Time: 16:52
  */
 
-include_once($_SERVER['DOCUMENT_ROOT']."\\administration\\entry.php");
+include_once($_SERVER['DOCUMENT_ROOT']."\\common\\entry.php");
 $accounts = $GLOBALS["objects"]["accounts"];
 $valid = array();
 
@@ -26,7 +26,7 @@ if (count($_POST)!=0) {
         }
     }
 }
-include ($abs_path."header.php");
+include ($abs_path."\\administration\\header.php");
 
 echo '<form ENCTYPE="multipart/form-data" class="form-horizontal" method="POST">
     <fieldset>';
@@ -49,4 +49,4 @@ echo    '   <div class="form-actions">
 
 
 
-include ($abs_path."footer.php");
+include ($abs_path."\\administration\\footer.php");

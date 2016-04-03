@@ -1,4 +1,4 @@
-<? include_once "entry.php"; ?>
+<? include_once $_SERVER['DOCUMENT_ROOT']."\\common\\entry.php"; ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>

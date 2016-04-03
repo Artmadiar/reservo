@@ -5,11 +5,11 @@
  * Date: 21.02.2016
  * Time: 5:41
  */
-include_once("entry.php");
+include($_SERVER['DOCUMENT_ROOT']."\\common\\entry.php");
 
-include ($abs_path."header.php");
-
-include_once("database.php");
+include ("header.php");
 
 
-include ($abs_path."footer.php");
+
+
+include ("footer.php");

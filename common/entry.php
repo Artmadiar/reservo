@@ -14,10 +14,10 @@ global $user;
 
 //initial
 
-$files_storage_server = $_SERVER['DOCUMENT_ROOT']."\\administration\\files\\";
-$files_storage = "administration/files/";
+$files_storage_server = $_SERVER['DOCUMENT_ROOT']."\\files\\";
+$files_storage = "files/";
 
-$abs_path = $_SERVER['DOCUMENT_ROOT']."\\administration\\";
+$abs_path = $_SERVER['DOCUMENT_ROOT']."\\";
 
 $level = substr_count($_SERVER['REQUEST_URI'],"/")-1;
 $rel_path = "";
@@ -25,10 +25,15 @@ for ($i = 1; $i <= $level; $i++) {
     $rel_path.='../';
 }
 
-$user = array("id"=>0,"login"=>"admin");
-
 //includes
 
-include_once($abs_path."init.php");
-include_once($abs_path."datamanager.php");
-include_once($abs_path."templater.php");
+include_once($abs_path."common\\init.php");
+include_once($abs_path."common\\datamanager.php");
+include_once($abs_path."common\\templater.php");
+
+
+//session
+
+include_once($abs_path."common\\security.php");
+
+//

@@ -6,7 +6,7 @@
  * Time: 0:21
  */
 
-include_once("datamanager.php");
+include_once($GLOBALS["abs_path"]."\\common\\datamanager.php");
 
 function cr_element($field,$value,$error){
 

@@ -6,7 +6,7 @@
  * Time: 1:31
  */
 
-include_once($_SERVER['DOCUMENT_ROOT']."\\administration\\entry.php");
+include_once($_SERVER['DOCUMENT_ROOT']."\\common\\entry.php");
 $accounts = $GLOBALS["objects"]["accounts"];
 $messages = "";
 
@@ -31,7 +31,7 @@ if (count($_POST)!=0) {
         }
     }
 }
-include ($abs_path."header.php");
+include ($abs_path."\\administration\\header.php");
 
 $data = get_first("accounts",array('id'=>array('value'=>$_REQUEST['id'])),'','id');
 
@@ -57,4 +57,4 @@ echo '
 
 
 
-include ($abs_path."footer.php");
+include ($abs_path."\\administration\\footer.php");

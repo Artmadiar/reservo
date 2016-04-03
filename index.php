@@ -6,7 +6,8 @@
  * Time: 7:52
  */
 
-include("administration/header.php");
+include($_SERVER['DOCUMENT_ROOT']."\\common\\entry.php");
+include($GLOBALS["abs_path"]."administration\\header.php");
 
 echo '<?xml version="1.0" encoding="utf-8"?>
 <svg style="width:60%;" version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -30,8 +31,7 @@ s-29.1,105.1,99.1,141.1s-28.2,40.3,14.1,106.8S451.9,433.1,451.9,433.1z"/>
     <path class="st1" d="M464.2,267.4c-23.6,23.6,0,43.8,0,43.8s17.4,14,31.5,0c14-14,0-36,0-36S477.3,254.3,464.2,267.4z"/>
 </svg>';
 
-include("administration/footer.php");
-
+include($GLOBALS["abs_path"]."administration\\footer.php");
 
 echo '
 <script src="'.$rel_path.'js/jquery.contextmenu.r2.packed.js"></script>';
